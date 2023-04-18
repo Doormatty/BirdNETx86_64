@@ -4,8 +4,8 @@ $user = shell_exec("awk -F: '/1000/{print $1}' /etc/passwd");
 $user = trim($user);
 $home = shell_exec("awk -F: '/1000/{print $6}' /etc/passwd");
 $home = trim($home);
-$fetch = shell_exec("sudo -u".$user." git -C ".$home."/BirdNET-Pi fetch 2>&1");
-$str = trim(shell_exec("sudo -u".$user." git -C ".$home."/BirdNET-Pi status"));
+$fetch = shell_exec("sudo -u".$user." git -C ".$home."/BirdNETx86_64 fetch 2>&1");
+$str = trim(shell_exec("sudo -u".$user." git -C ".$home."/BirdNETx86_64 status"));
 if (preg_match("/behind '.*?' by (\d+) commit(s?)\b/", $str, $matches)) {
   $num_commits_behind = $matches[1];
   $_SESSION['behind'] = $num_commits_behind; 

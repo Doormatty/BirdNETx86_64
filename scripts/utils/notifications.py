@@ -7,8 +7,8 @@ import requests
 import time as timeim
 
 userDir = os.path.expanduser('~')
-APPRISE_CONFIG = userDir + '/BirdNET-Pi/apprise.txt'
-DB_PATH = userDir + '/BirdNET-Pi/scripts/birds.db'
+APPRISE_CONFIG = userDir + '/BirdNETx86_64/apprise.txt'
+DB_PATH = userDir + '/BirdNETx86_64/scripts/birds.db'
 
 flickr_images = {}
 species_last_notified = {}

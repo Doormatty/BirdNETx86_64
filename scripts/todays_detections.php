@@ -13,7 +13,7 @@ if (file_exists('./scripts/thisrun.txt')) {
   } 
 
   if($config["SITE_NAME"] == "") {
-    $site_name = "BirdNET-Pi";
+    $site_name = "BirdNETx86_64";
   } else {
     $site_name = $config['SITE_NAME'];
   }
@@ -269,7 +269,7 @@ if(isset($_GET['ajax_detections']) && $_GET['ajax_detections'] == "true"  ) {
 
       // only open the file once per script execution
       if(!isset($lines)) {
-        $lines = file($home."/BirdNET-Pi/model/labels_flickr.txt");
+        $lines = file($home."/BirdNETx86_64/model/labels_flickr.txt");
       }
       // convert sci name to English name
       foreach($lines as $line){ 
@@ -279,7 +279,7 @@ if(isset($_GET['ajax_detections']) && $_GET['ajax_detections'] == "true"  ) {
         }
       }
       // Read the blacklisted image ids from the file into an array
-      $blacklisted_ids = array_map('trim', file($home."/BirdNET-Pi/scripts/blacklisted_images.txt"));
+      $blacklisted_ids = array_map('trim', file($home."/BirdNETx86_64/scripts/blacklisted_images.txt"));
 
       // Make the API call
       $flickrjson = json_decode(file_get_contents("https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=".$config["FLICKR_API_KEY"]."&text=".str_replace(" ", "%20", $engname).$comnameprefix."&sort=relevance".$args."&per_page=5&media=photos&format=json&nojsoncallback=1"), true)["photos"]["photo"];
@@ -414,7 +414,7 @@ die();
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>BirdNET-Pi DB</title>
+  <title>BirdNETx86_64 DB</title>
   <style>
 </style>
 </head>

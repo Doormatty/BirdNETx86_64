@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Update BirdNET-Pi's Git Repo
+# Update BirdNETx86_64's Git Repo
 source /etc/birdnet/birdnet.conf
 trap 'exit 1' SIGINT SIGHUP
 
@@ -7,7 +7,7 @@ usage() { echo "Usage: $0 [-r <remote name>] [-b <branch name>]" 1>&2; exit 1; }
 
 USER=$(awk -F: '/1000/ {print $1}' /etc/passwd)
 HOME=$(awk -F: '/1000/ {print $6}' /etc/passwd)
-my_dir=$HOME/BirdNET-Pi/scripts
+my_dir=$HOME/BirdNETx86_64/scripts
 
 # Defaults
 remote="origin"
@@ -17,7 +17,7 @@ while getopts ":r:b:" o; do
   case "${o}" in
     r)
       remote=${OPTARG}
-      git -C $HOME/BirdNET-Pi remote show $remote > /dev/null 2>&1
+      git -C $HOME/BirdNETx86_64 remote show $remote > /dev/null 2>&1
       ret_val=$?
 
       if [ $ret_val -ne 0 ]; then
@@ -42,19 +42,19 @@ sudo_with_user () {
 }
 
 # Get current HEAD hash
-commit_hash=$(sudo_with_user git -C $HOME/BirdNET-Pi rev-parse HEAD)
+commit_hash=$(sudo_with_user git -C $HOME/BirdNETx86_64 rev-parse HEAD)
 
 # Reset current HEAD to remove any local changes
-sudo_with_user git -C $HOME/BirdNET-Pi reset --hard
+sudo_with_user git -C $HOME/BirdNETx86_64 reset --hard
 
 # Fetches latest changes
-sudo_with_user git -C $HOME/BirdNET-Pi fetch $remote $branch
+sudo_with_user git -C $HOME/BirdNETx86_64 fetch $remote $branch
 
 # Switches git to specified branch
-sudo_with_user git -C $HOME/BirdNET-Pi switch -C $branch --track $remote/$branch
+sudo_with_user git -C $HOME/BirdNETx86_64 switch -C $branch --track $remote/$branch
 
 # Prints out changes
-sudo_with_user git -C $HOME/BirdNET-Pi diff --stat $commit_hash HEAD
+sudo_with_user git -C $HOME/BirdNETx86_64 diff --stat $commit_hash HEAD
 
 sudo systemctl daemon-reload
 sudo ln -sf $my_dir/* /usr/local/bin/

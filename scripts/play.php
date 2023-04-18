@@ -58,11 +58,11 @@ if(isset($_GET['excludefile'])) {
     $submittedpwd = $_SERVER['PHP_AUTH_PW'];
     $submitteduser = $_SERVER['PHP_AUTH_USER'];
     if($submittedpwd == $config['CADDY_PWD'] && $submitteduser == 'birdnet'){
-      if(!file_exists($home."/BirdNET-Pi/scripts/disk_check_exclude.txt")) {
-        file_put_contents($home."/BirdNET-Pi/scripts/disk_check_exclude.txt", "##start\n##end\n");
+      if(!file_exists($home."/BirdNETx86_64/scripts/disk_check_exclude.txt")) {
+        file_put_contents($home."/BirdNETx86_64/scripts/disk_check_exclude.txt", "##start\n##end\n");
       }
       if(isset($_GET['exclude_add'])) {
-        $myfile = fopen($home."/BirdNET-Pi/scripts/disk_check_exclude.txt", "a") or die("Unable to open file!");
+        $myfile = fopen($home."/BirdNETx86_64/scripts/disk_check_exclude.txt", "a") or die("Unable to open file!");
         $txt = $_GET['excludefile'];
         fwrite($myfile, $txt."\n");
         fwrite($myfile, $txt.".png\n");
@@ -70,7 +70,7 @@ if(isset($_GET['excludefile'])) {
         echo "OK";
         die();
       } else {
-        $lines  = file($home."/BirdNET-Pi/scripts/disk_check_exclude.txt");
+        $lines  = file($home."/BirdNETx86_64/scripts/disk_check_exclude.txt");
         $search = $_GET['excludefile'];
 
         $result = '';
@@ -79,7 +79,7 @@ if(isset($_GET['excludefile'])) {
             $result .= $line;
           }
         }
-        file_put_contents($home."/BirdNET-Pi/scripts/disk_check_exclude.txt", $result);
+        file_put_contents($home."/BirdNETx86_64/scripts/disk_check_exclude.txt", $result);
         echo "OK";
         die();
       }
@@ -422,9 +422,9 @@ if(isset($_GET['species'])){ ?>
 </div>
 <?php
   // add disk_check_exclude.txt lines into an array for grepping
-  $fp = @fopen($home."/BirdNET-Pi/scripts/disk_check_exclude.txt", 'r'); 
+  $fp = @fopen($home."/BirdNETx86_64/scripts/disk_check_exclude.txt", 'r'); 
 if ($fp) {
-  $disk_check_exclude_arr = explode("\n", fread($fp, filesize($home."/BirdNET-Pi/scripts/disk_check_exclude.txt")));
+  $disk_check_exclude_arr = explode("\n", fread($fp, filesize($home."/BirdNETx86_64/scripts/disk_check_exclude.txt")));
 }
 
 $name = $_GET['species'];
@@ -556,9 +556,9 @@ echo "<table>
         $filename_formatted = $date."/".$comname."/".$results['File_Name'];
 
         // add disk_check_exclude.txt lines into an array for grepping
-        $fp = @fopen($home."/BirdNET-Pi/scripts/disk_check_exclude.txt", 'r'); 
+        $fp = @fopen($home."/BirdNETx86_64/scripts/disk_check_exclude.txt", 'r'); 
         if ($fp) {
-          $disk_check_exclude_arr = explode("\n", fread($fp, filesize($home."/BirdNET-Pi/scripts/disk_check_exclude.txt")));
+          $disk_check_exclude_arr = explode("\n", fread($fp, filesize($home."/BirdNETx86_64/scripts/disk_check_exclude.txt")));
         }
 
         if($config["FULL_DISK"] == "purge") {

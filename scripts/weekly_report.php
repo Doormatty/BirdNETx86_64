@@ -77,7 +77,7 @@ if(isset($_GET['ascii'])) {
 		$detections[$detection["Com_Name"]] = $detection["COUNT(*)"];
 	}
 
-	echo "# BirdNET-Pi: Week ".date('W', $enddate)." Report\n";
+	echo "# BirdNETx86_64: Week ".date('W', $enddate)." Report\n";
 
 	echo "Total Detections: <b>".$totalcount."</b> (".$percentagedifftotal.")<br>";
 	echo "Unique Species Detected: <b>".$totalspeciestally."</b> (".$percentagedifftotaldistinctspecies.")<br><br>";

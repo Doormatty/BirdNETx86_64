@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 OLDIFS=$IFS
 IFS=\|
-most_recent_results=($(sqlite3 ~/BirdNET-Pi/scripts/birds.db \
+most_recent_results=($(sqlite3 ~/BirdNETx86_64/scripts/birds.db \
   'SELECT Com_Name, Time, Date FROM detections
    ORDER BY Date DESC, Time DESC
    LIMIT 1'))

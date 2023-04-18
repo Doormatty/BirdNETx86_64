@@ -4,15 +4,15 @@ set -x # Debugging
 exec > >(tee -i installation-$(date +%F).txt) 2>&1 # Make log
 set -e # exit installation if anything fails
 
-my_dir=$HOME/BirdNET-Pi
+my_dir=$HOME/BirdNETx86_64
 export my_dir=$my_dir
 
 cd $my_dir/scripts || exit 1
 
-if [ "$(uname -m)" != "aarch64" ];then
-  echo "BirdNET-Pi requires a 64-bit OS.
+if [ "$(uname -m)" != "x86_64" ];then
+  echo "BirdNETx86_64 requires a 64-bit OS.
 It looks like your operating system is using $(uname -m),
-but would need to be aarch64.
+but would need to be x86_64.
 Please take a look at https://birdnetwiki.pmcgui.xyz for more
 information"
   exit 1
@@ -24,11 +24,11 @@ sudo -E HOME=$HOME USER=$USER ./install_services.sh || exit 1
 source /etc/birdnet/birdnet.conf
 
 install_birdnet() {
-  cd ~/BirdNET-Pi || exit 1
+  cd ~/BirdNETx86_64 || exit 1
   echo "Establishing a python virtual environment"
   python3 -m venv birdnet
   source ./birdnet/bin/activate
-  pip3 install -U -r $HOME/BirdNET-Pi/requirements.txt
+  pip3 install -U -r $HOME/BirdNETx86_64/requirements.txt
 }
 
 [ -d ${RECS_DIR} ] || mkdir -p ${RECS_DIR} &> /dev/null

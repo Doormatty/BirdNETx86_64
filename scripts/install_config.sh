@@ -24,7 +24,7 @@ fi
 install_config() {
   cat << EOF > $birdnet_conf
 ################################################################################
-#                    Configuration settings for BirdNET-Pi                     #
+#                    Configuration settings for BirdNETx86_64                     #
 ################################################################################
 
 # Optional: Site Title for banner
@@ -50,7 +50,7 @@ MODEL=BirdNET_6K_GLOBAL_MODEL
 SF_THRESH=0.03
 
 #---------------------  BirdWeather Station Information -----------------------#
-#_____________The variable below can be set to have your BirdNET-Pi____________#
+#_____________The variable below can be set to have your BirdNETx86_64____________#
 #__________________also act as a BirdWeather listening station_________________#
 
 BIRDWEATHER_ID=
@@ -84,7 +84,7 @@ ICE_PWD=birdnetpi
 
 ## BIRDNETPI_URL is the URL where the extractions, data-set, and live-stream
 ## will be web-hosted. If you do not own a domain, or would just prefer to keep
-## the BirdNET-Pi on your local network, keep this EMPTY.
+## the BirdNETx86_64 on your local network, keep this EMPTY.
 
 BIRDNETPI_URL=
 
@@ -92,13 +92,13 @@ BIRDNETPI_URL=
 
 ## If RTSP_STREAM is set, the system will use the RTSP stream as its audio
 ## source instead of recording its own audio. If this variable is kept empty,
-## BirdNET-Pi will default to recording its own audio.
+## BirdNETx86_64 will default to recording its own audio.
 
 RTSP_STREAM=
 
 #-----------------------  Apprise Miscellanous Configuration -------------------#
 
-APPRISE_NOTIFICATION_TITLE="New BirdNET-Pi Detection"
+APPRISE_NOTIFICATION_TITLE="New BirdNETx86_64 Detection"
 APPRISE_NOTIFICATION_BODY="A \$comname (\$sciname)  was just detected with a confidence of \$confidence"
 APPRISE_NOTIFY_EACH_DETECTION=0
 APPRISE_NOTIFY_NEW_SPECIES=0
@@ -235,7 +235,7 @@ SILENCE_UPDATE_INDICATOR=0
 RAW_SPECTROGRAM=0
 
 ## CUSTOM_IMAGE and CUSTOM_IMAGE_TITLE allow you to show a custom image on the
-## Overview page of your BirdNET-Pi. This can be used to show a dynamically 
+## Overview page of your BirdNETx86_64. This can be used to show a dynamically 
 ## updating picture of your garden, for example.
 
 CUSTOM_IMAGE=
@@ -244,7 +244,7 @@ CUSTOM_IMAGE_TITLE=""
 ## These are just for debugging
 LAST_RUN=
 THIS_RUN=
-IDFILE=$HOME/BirdNET-Pi/IdentifiedSoFar.txt
+IDFILE=$HOME/BirdNETx86_64/IdentifiedSoFar.txt
 EOF
 }
 

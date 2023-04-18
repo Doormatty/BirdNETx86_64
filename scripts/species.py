@@ -31,7 +31,7 @@ def loadMetaModel():
     global CLASSES
 
     # Load TFLite model and allocate tensors.
-    M_INTERPRETER = tflite.Interpreter(model_path=userDir + '/BirdNET-Pi/model/BirdNET_GLOBAL_3K_V2.2_MData_Model_FP16.tflite')
+    M_INTERPRETER = tflite.Interpreter(model_path=userDir + '/BirdNETx86_64/model/BirdNET_GLOBAL_3K_V2.2_MData_Model_FP16.tflite')
     M_INTERPRETER.allocate_tensors()
 
     # Get input and output tensors.
@@ -44,7 +44,7 @@ def loadMetaModel():
 
     # Load labels
     CLASSES = []
-    labelspath = userDir + '/BirdNET-Pi/model/labels.txt'
+    labelspath = userDir + '/BirdNETx86_64/model/labels.txt'
     with open(labelspath, 'r') as lfile:
         for line in lfile.readlines():
             CLASSES.append(line.replace('\n', ''))
@@ -104,8 +104,8 @@ def getSpeciesList(lat, lon, week, threshold=0.05, sort=False):
 
 
 userDir = os.path.expanduser('~')
-DB_PATH = userDir + '/BirdNET-Pi/scripts/birds.db'
-with open(userDir + '/BirdNET-Pi/scripts/thisrun.txt', 'r') as f:
+DB_PATH = userDir + '/BirdNETx86_64/scripts/birds.db'
+with open(userDir + '/BirdNETx86_64/scripts/thisrun.txt', 'r') as f:
 
     this_run = f.readlines()
     lat = str(str(str([i for i in this_run if i.startswith('LATITUDE')]).split('=')[1]).split('\\')[0])
@@ -116,7 +116,7 @@ if __name__ == '__main__':
 
     # Parse arguments
     parser = argparse.ArgumentParser(description='Get list of species for a given location with BirdNET. Sorted by occurrence frequency.')
-    #parser.add_argument('--o', default='/home/pi/BirdNET-Pi/include_species_list.txt', help='Path to output file or folder. If this is a folder, file will be named \'species_list.txt\'.')
+    #parser.add_argument('--o', default='/home/pi/BirdNETx86_64/include_species_list.txt', help='Path to output file or folder. If this is a folder, file will be named \'species_list.txt\'.')
     #parser.add_argument('--lat', type=float, default=##, help='Recording location latitude. Set -1 to ignore.')
     #parser.add_argument('--lon', type=float, default=##, help='Recording location longitude. Set -1 to ignore.')
     #parser.add_argument('--week', type=int, default=dayofweek, help='Week of the year when the recording was made. Values in [1, 48] (4 weeks per month). Set -1 for year-round species list.')
@@ -133,7 +133,7 @@ if __name__ == '__main__':
         print(species_list[x][0] + " - "+ str(species_list[x][1]))
     
     print("\nThe above species list describes all the species that the model will attempt to detect. If you don't see a species you want detected on this list, decrease your threshold.")
-    print("\nNOTE: no actual changes to your BirdNET-Pi species list were made by running this command. To set your desired frequency threshold, do it through the BirdNET-Pi web interface (Tools -> Settings -> Model)")
+    print("\nNOTE: no actual changes to your BirdNETx86_64 species list were made by running this command. To set your desired frequency threshold, do it through the BirdNETx86_64 web interface (Tools -> Settings -> Model)")
 
 
 

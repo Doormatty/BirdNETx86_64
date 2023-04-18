@@ -254,7 +254,7 @@ if(isset($_GET['submit'])) {
 $user = trim(shell_exec("awk -F: '/1000/{print $1}' /etc/passwd"));
 $home = trim(shell_exec("awk -F: '/1000/{print $6}' /etc/passwd"));
 
-$count_labels = count(file($home."/BirdNET-Pi/model/labels.txt"));
+$count_labels = count(file($home."/BirdNETx86_64/model/labels.txt"));
 $count = $count_labels;
 ?>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -408,10 +408,10 @@ foreach($formats as $format){
         <br>
         <span id="newrtspstream" onclick="addNewrtspInput();">Add</span><br>
       </div>
-      <p>If you place an RTSP stream URL here, BirdNET-Pi will use that as its audio source.<br>Multiple streams are allowed but may have a impact on rPi performance.<br>Analyze ffmpeg CPU/Memory usage with <b>top</b> or <b>htop</b> if necessary.<br>To remove all and use the soundcard again, just delete the RTSP entries and click Save at the bottom.</p>
+      <p>If you place an RTSP stream URL here, BirdNETx86_64 will use that as its audio source.<br>Multiple streams are allowed but may have a impact on rPi performance.<br>Analyze ffmpeg CPU/Memory usage with <b>top</b> or <b>htop</b> if necessary.<br>To remove all and use the soundcard again, just delete the RTSP entries and click Save at the bottom.</p>
       </td></tr></table><br>
       <table class="settingstable"><tr><td>
-      <h2>BirdNET-Pi Password</h2>
+      <h2>BirdNETx86_64 Password</h2>
       <p>This password will protect your "Tools" page and "Live Audio" stream.</p>
       <label for="caddy_pwd">Password: </label>
       <input style="width:40ch" name="caddy_pwd" id="caddy_pwd" type="password" pattern="[A-Za-z0-9]+" title="Password must be alphanumeric (A-Z, 0-9)" value="<?php print($newconfig['CADDY_PWD']);?>" /><span id="showpassword" onmouseover="document.getElementById('caddy_pwd').type='text';" onmouseout="document.getElementById('caddy_pwd').type='password';">show</span><br>
@@ -419,9 +419,9 @@ foreach($formats as $format){
       <table class="settingstable"><tr><td>
       <h2>Custom URL</h2>
       <p>When you update the URL below, the web server will reload, so be sure to wait at least 30 seconds and then go to your new URL.</p>
-      <label for="birdnetpi_url">BirdNET-Pi URL: </label>
+      <label for="birdnetpi_url">BirdNETx86_64 URL: </label>
       <input style="width:40ch;" name="birdnetpi_url" type="url" value="<?php print($newconfig['BIRDNETPI_URL']);?>" /><br>
-      <p>The BirdNET-Pi URL is how the main page will be reached. If you want your installation to respond to an IP address, place that here, but be sure to indicate "<i>http://</i>".<br>Example for IP: <i>http://192.168.0.109</i><br>Example if you own your own domain: <i>https://virginia.birdnetpi.com</i></p>
+      <p>The BirdNETx86_64 URL is how the main page will be reached. If you want your installation to respond to an IP address, place that here, but be sure to indicate "<i>http://</i>".<br>Example for IP: <i>http://192.168.0.109</i><br>Example if you own your own domain: <i>https://virginia.birdnetpi.com</i></p>
       </td></tr></table><br>
       <table class="settingstable"><tr><td>
       <h2>Options</h2>
@@ -442,7 +442,7 @@ foreach($formats as $format){
       <label for="custom_image_label">Custom Image Label: </label>
       <input name="custom_image_label" type="text" value="<?php print($newconfig['CUSTOM_IMAGE_TITLE']);?>"/><br>
 
-      <p>These allow you to show a custom image on the Overview page of your BirdNET-Pi. This can be used to show a dynamically updating picture of your garden, for example.</p>
+      <p>These allow you to show a custom image on the Overview page of your BirdNETx86_64. This can be used to show a dynamically updating picture of your garden, for example.</p>
 	  </td></tr></table><br>
 
       <table class="settingstable"><tr><td>

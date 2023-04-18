@@ -10,7 +10,7 @@ import matplotlib.font_manager as font_manager
 from matplotlib import rcParams
 
 userDir = os.path.expanduser('~')
-conn = sqlite3.connect(userDir + '/BirdNET-Pi/scripts/birds.db')
+conn = sqlite3.connect(userDir + '/BirdNETx86_64/scripts/birds.db')
 df = pd.read_sql_query("SELECT * from detections", conn)
 cursor = conn.cursor()
 cursor.execute('SELECT * FROM detections WHERE Date = DATE(\'now\', \'localtime\')')
@@ -31,7 +31,7 @@ df['Hour of Day'] = [r.hour for r in df.Time]
 df_plt = df  # Default to use the whole Dbase
 
 # Add every font at the specified location
-font_dir = [userDir + '/BirdNET-Pi/homepage/static']
+font_dir = [userDir + '/BirdNETx86_64/homepage/static']
 for font in font_manager.findSystemFonts(font_dir):
     font_manager.fontManager.addfont(font)
 

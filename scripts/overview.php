@@ -53,7 +53,7 @@ if(isset($_GET['blacklistimage'])) {
     if($submittedpwd == $config['CADDY_PWD'] && $submitteduser == 'birdnet'){
 
       $imageid = $_GET['blacklistimage'];
-      $file_handle = fopen($home."/BirdNET-Pi/scripts/blacklisted_images.txt", 'a+');
+      $file_handle = fopen($home."/BirdNETx86_64/scripts/blacklisted_images.txt", 'a+');
       fwrite($file_handle, $imageid . "\n");
       fclose($file_handle);
       unset($_SESSION['images']);
@@ -147,7 +147,7 @@ if(isset($_GET['ajax_detections']) && $_GET['ajax_detections'] == "true" && isse
 
           // only open the file once per script execution
           if(!isset($lines)) {
-            $lines = file($home."/BirdNET-Pi/model/labels_flickr.txt");
+            $lines = file($home."/BirdNETx86_64/model/labels_flickr.txt");
           }
           // convert sci name to English name
           foreach($lines as $line){ 
@@ -158,7 +158,7 @@ if(isset($_GET['ajax_detections']) && $_GET['ajax_detections'] == "true" && isse
           }
 
            // Read the blacklisted image ids from the file into an array
-          $blacklisted_ids = array_map('trim', file($home."/BirdNET-Pi/scripts/blacklisted_images.txt"));
+          $blacklisted_ids = array_map('trim', file($home."/BirdNETx86_64/scripts/blacklisted_images.txt"));
 
           // Make the API call
           $flickrjson = json_decode(file_get_contents("https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=".$config["FLICKR_API_KEY"]."&text=".str_replace(" ", "%20", $engname).$comnameprefix."&sort=relevance".$args."&per_page=5&media=photos&format=json&nojsoncallback=1"), true)["photos"]["photo"];
@@ -225,7 +225,7 @@ if(isset($_GET['ajax_detections']) && $_GET['ajax_detections'] == "true" && isse
   }
   if($iterations == 0) {
     if($todaycount['COUNT(*)'] > 0) {
-      echo "<h3>Your system is currently processing a backlog of audio. This can take several hours before normal functionality of your BirdNET-Pi resumes.</h3>";
+      echo "<h3>Your system is currently processing a backlog of audio. This can take several hours before normal functionality of your BirdNETx86_64 resumes.</h3>";
     } else {
       echo "<h3>No Detections For Today.</h3>";
     }
