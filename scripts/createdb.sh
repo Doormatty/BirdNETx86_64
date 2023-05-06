@@ -18,5 +18,5 @@ CREATE TABLE IF NOT EXISTS detections (
 CREATE INDEX "detections_Com_Name" ON "detections" ("Com_Name");
 CREATE INDEX "detections_Date_Time" ON "detections" ("Date" DESC, "Time" DESC);
 EOF
-chown $USER:$USER /root/BirdNETx86_64/scripts/birds.db
+chown root:root /root/BirdNETx86_64/scripts/birds.db
 chmod g+w /root/BirdNETx86_64/scripts/birds.db

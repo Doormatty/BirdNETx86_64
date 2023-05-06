@@ -6,14 +6,13 @@ trap 'exit 1' SIGINT SIGHUP
 tmpfile=$(mktemp)
 
 config_file=$BIRDNETDIR/birdnet.conf
-export USER=$USER
-export HOME=$HOME
+export USER=root
+export HOME=/root/
 
 export PYTHON_VIRTUAL_ENV="/root/BirdNETx86_64/birdnet/bin/python3"
 
 install_depends() {
-  apt install -y curl
-  apt install -y debian-keyring debian-archive-keyring apt-transport-https
+  apt install -y curl debian-keyring debian-archive-keyring apt-transport-https
   curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
   curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list
   apt -qqq update && apt -qqy upgrade
@@ -22,14 +21,6 @@ install_depends() {
     pulseaudio avahi-utils sox libsox-fmt-mp3 php php-fpm php-curl php-xml \
     php-zip icecast2 swig ffmpeg wget unzip curl cmake make bc libjpeg-dev \
     zlib1g-dev python3-dev python3-pip python3-venv lsof
-}
-
-
-set_hostname() {
-  if [ "$(hostname)" == "raspberrypi" ];then
-    hostnamectl set-hostname birdnetpi
-    sed -i 's/raspberrypi/birdnetpi/g' /etc/hosts
-  fi
 }
 
 update_etc_hosts() {
@@ -50,7 +41,7 @@ Requires=birdnet_server.service
 Restart=always
 Type=simple
 RestartSec=2
-User=${USER}
+User=root
 ExecStart=/usr/local/bin/birdnet_analysis.sh
 [Install]
 WantedBy=multi-user.target
@@ -68,7 +59,7 @@ Before=birdnet_analysis.service
 Restart=always
 Type=simple
 RestartSec=10
-User=${USER}
+User=root
 ExecStart=$PYTHON_VIRTUAL_ENV /usr/local/bin/server.py
 [Install]
 WantedBy=multi-user.target
@@ -85,7 +76,7 @@ Description=BirdNET BirdSound Extraction
 Restart=on-failure
 RestartSec=3
 Type=simple
-User=${USER}
+User=root
 ExecStart=/usr/bin/env bash -c 'while true;do extract_new_birdsounds.sh;sleep 3;done'
 [Install]
 WantedBy=multi-user.target
@@ -96,28 +87,28 @@ EOF
 
 create_necessary_dirs() {
   echo "Creating necessary directories"
-  [ -d ${EXTRACTED} ] || sudo -u ${USER} mkdir -p ${EXTRACTED}
-  [ -d ${EXTRACTED}/By_Date ] || sudo -u ${USER} mkdir -p ${EXTRACTED}/By_Date
-  [ -d ${EXTRACTED}/Charts ] || sudo -u ${USER} mkdir -p ${EXTRACTED}/Charts
-  [ -d ${PROCESSED} ] || sudo -u ${USER} mkdir -p ${PROCESSED}
+  [ -d ${EXTRACTED} ] || mkdir -p ${EXTRACTED}
+  [ -d ${EXTRACTED}/By_Date ] || mkdir -p ${EXTRACTED}/By_Date
+  [ -d ${EXTRACTED}/Charts ] || mkdir -p ${EXTRACTED}/Charts
+  [ -d ${PROCESSED} ] || mkdir -p ${PROCESSED}
 
-  sudo -u ${USER} ln -fs $BIRDNETDIR/exclude_species_list.txt $BIRDNETDIR/scripts
-  sudo -u ${USER} ln -fs $BIRDNETDIR/include_species_list.txt $BIRDNETDIR/scripts
-  sudo -u ${USER} ln -fs $BIRDNETDIR/homepage/* ${EXTRACTED}
-  sudo -u ${USER} ln -fs $BIRDNETDIR/model/labels.txt ${BIRDNETDIR}/scripts
-  sudo -u ${USER} ln -fs $BIRDNETDIR/scripts ${EXTRACTED}
-  sudo -u ${USER} ln -fs $BIRDNETDIR/scripts/play.php ${EXTRACTED}
-  sudo -u ${USER} ln -fs $BIRDNETDIR/scripts/spectrogram.php ${EXTRACTED}
-  sudo -u ${USER} ln -fs $BIRDNETDIR/scripts/overview.php ${EXTRACTED}
-  sudo -u ${USER} ln -fs $BIRDNETDIR/scripts/stats.php ${EXTRACTED}
-  sudo -u ${USER} ln -fs $BIRDNETDIR/scripts/todays_detections.php ${EXTRACTED}
-  sudo -u ${USER} ln -fs $BIRDNETDIR/scripts/history.php ${EXTRACTED}
-  sudo -u ${USER} ln -fs $BIRDNETDIR/scripts/weekly_report.php ${EXTRACTED}
-  sudo -u ${USER} ln -fs $BIRDNETDIR/homepage/images/favicon.ico ${EXTRACTED}
-  sudo -u ${USER} ln -fs ${HOME}/phpsysinfo ${EXTRACTED}
-  sudo -u ${USER} ln -fs $BIRDNETDIR/templates/phpsysinfo.ini ${HOME}/phpsysinfo/
-  sudo -u ${USER} ln -fs $BIRDNETDIR/templates/green_bootstrap.css ${HOME}/phpsysinfo/templates/
-  sudo -u ${USER} ln -fs $BIRDNETDIR/templates/index_bootstrap.html ${HOME}/phpsysinfo/templates/html
+  ln -fs $BIRDNETDIR/exclude_species_list.txt $BIRDNETDIR/scripts
+  ln -fs $BIRDNETDIR/include_species_list.txt $BIRDNETDIR/scripts
+  ln -fs $BIRDNETDIR/homepage/* ${EXTRACTED}
+  ln -fs $BIRDNETDIR/model/labels.txt ${BIRDNETDIR}/scripts
+  ln -fs $BIRDNETDIR/scripts ${EXTRACTED}
+  ln -fs $BIRDNETDIR/scripts/play.php ${EXTRACTED}
+  ln -fs $BIRDNETDIR/scripts/spectrogram.php ${EXTRACTED}
+  ln -fs $BIRDNETDIR/scripts/overview.php ${EXTRACTED}
+  ln -fs $BIRDNETDIR/scripts/stats.php ${EXTRACTED}
+  ln -fs $BIRDNETDIR/scripts/todays_detections.php ${EXTRACTED}
+  ln -fs $BIRDNETDIR/scripts/history.php ${EXTRACTED}
+  ln -fs $BIRDNETDIR/scripts/weekly_report.php ${EXTRACTED}
+  ln -fs $BIRDNETDIR/homepage/images/favicon.ico ${EXTRACTED}
+  ln -fs ${HOME}/phpsysinfo ${EXTRACTED}
+  ln -fs $BIRDNETDIR/templates/phpsysinfo.ini ${HOME}/phpsysinfo/
+  ln -fs $BIRDNETDIR/templates/green_bootstrap.css ${HOME}/phpsysinfo/templates/
+  ln -fs $BIRDNETDIR/templates/index_bootstrap.html ${HOME}/phpsysinfo/templates/html
   chmod -R g+rw $BIRDNETDIR
   chmod -R g+rw ${RECS_DIR}
 }
@@ -125,12 +116,12 @@ create_necessary_dirs() {
 generate_BirdDB() {
   echo "Generating BirdDB.txt"
   if ! [ -f $BIRDNETDIR/BirdDB.txt ];then
-    sudo -u ${USER} touch $BIRDNETDIR/BirdDB.txt
-    echo "Date;Time;Sci_Name;Com_Name;Confidence;Lat;Lon;Cutoff;Week;Sens;Overlap" | sudo -u ${USER} tee -a $BIRDNETDIR/BirdDB.txt
+    touch $BIRDNETDIR/BirdDB.txt
+    echo "Date;Time;Sci_Name;Com_Name;Confidence;Lat;Lon;Cutoff;Week;Sens;Overlap" | tee -a $BIRDNETDIR/BirdDB.txt
   elif ! grep Date $BIRDNETDIR/BirdDB.txt;then
-    sudo -u ${USER} sed -i '1 i\Date;Time;Sci_Name;Com_Name;Confidence;Lat;Lon;Cutoff;Week;Sens;Overlap' $BIRDNETDIR/BirdDB.txt
+    sed -i '1 i\Date;Time;Sci_Name;Com_Name;Confidence;Lat;Lon;Cutoff;Week;Sens;Overlap' $BIRDNETDIR/BirdDB.txt
   fi
-  chown $USER:$USER ${BIRDNETDIR}/BirdDB.txt && chmod g+rw ${BIRDNETDIR}/BirdDB.txt
+  chown root:root ${BIRDNETDIR}/BirdDB.txt && chmod g+rw ${BIRDNETDIR}/BirdDB.txt
 }
 
 set_login() {
@@ -140,7 +131,7 @@ set_login() {
     cat > /etc/systemd/system/getty@tty1.service.d/autologin.conf << EOF
 [Service]
 ExecStart=
-ExecStart=-/sbin/agetty --autologin $USER --noclear %I \$TERM
+ExecStart=-/sbin/agetty --autologin root --noclear %I \$TERM
 EOF
   fi
 }
@@ -155,7 +146,7 @@ Environment=XDG_RUNTIME_DIR=/run/user/1000
 Restart=always
 Type=simple
 RestartSec=3
-User=${USER}
+User=root
 ExecStart=/usr/local/bin/birdnet_recording.sh
 [Install]
 WantedBy=multi-user.target
@@ -174,7 +165,7 @@ Environment=XDG_RUNTIME_DIR=/run/user/1000
 Restart=always
 Type=simple
 RestartSec=3
-User=${USER}
+User=root
 ExecStart=/usr/local/bin/custom_recording.sh
 [Install]
 WantedBy=multi-user.target
@@ -248,25 +239,6 @@ EOF
   usermod -aG $USER caddy
   usermod -aG video caddy
 }
-
-install_avahi_aliases() {
-  cat << 'EOF' > /root/BirdNETx86_64/templates/avahi-alias@.service
-[Unit]
-Description=Publish %I as alias for %H.local via mdns
-After=network.target network-online.target
-Requires=network-online.target
-[Service]
-Restart=always
-RestartSec=3
-Type=simple
-ExecStart=/bin/bash -c "/usr/bin/avahi-publish -a -R %I $(hostname -I |cut -d' ' -f1)"
-[Install]
-WantedBy=multi-user.target
-EOF
-  ln -sf /root/BirdNETx86_64/templates/avahi-alias@.service /usr/lib/systemd/system
-  systemctl enable avahi-alias@"$(hostname)".local.service
-}
-
 install_birdnet_stats_service() {
   cat << EOF > /root/BirdNETx86_64/templates/birdnet_stats.service
 [Unit]
@@ -275,7 +247,7 @@ Description=BirdNET Stats
 Restart=on-failure
 RestartSec=5
 Type=simple
-User=${USER}
+User=root
 ExecStart=/root/BirdNETx86_64/birdnet/bin/streamlit run /root/BirdNETx86_64/scripts/plotly_streamlit.py --browser.gatherUsageStats false --server.address localhost --server.baseUrlPath "/stats"
 
 [Install]
@@ -293,7 +265,7 @@ Description=BirdNETx86_64 Spectrogram Viewer
 Restart=always
 RestartSec=10
 Type=simple
-User=${USER}
+User=root
 ExecStart=/usr/local/bin/spectrogram.sh
 [Install]
 WantedBy=multi-user.target
@@ -311,7 +283,7 @@ Description=BirdNETx86_64 Chart Viewer Service
 Restart=always
 RestartSec=120
 Type=simple
-User=$USER
+User=root
 ExecStart=$PYTHON_VIRTUAL_ENV /usr/local/bin/daily_plot.py
 [Install]
 WantedBy=multi-user.target
@@ -321,10 +293,8 @@ EOF
 }
 
 install_gotty_logs() {
-  sudo -u ${USER} ln -sf $BIRDNETDIR/templates/gotty \
-    ${HOME}/.gotty
-  sudo -u ${USER} ln -sf $BIRDNETDIR/templates/bashrc \
-    ${HOME}/.bashrc
+  ln -sf $BIRDNETDIR/templates/gotty ${HOME}/.gotty
+  ln -sf $BIRDNETDIR/templates/bashrc ${HOME}/.bashrc
   cat << EOF > /root/BirdNETx86_64/templates/birdnet_log.service
 [Unit]
 Description=BirdNET Analysis Log
@@ -332,7 +302,7 @@ Description=BirdNET Analysis Log
 Restart=on-failure
 RestartSec=3
 Type=simple
-User=${USER}
+User=root
 Environment=TERM=xterm-256color
 ExecStart=/usr/local/bin/gotty --address localhost -p 8080 --path log --title-format "BirdNETx86_64 Log" birdnet_log.sh
 [Install]
@@ -368,8 +338,7 @@ EOF
 }
 
 install_phpsysinfo() {
-  sudo -u ${USER} git clone https://github.com/phpsysinfo/phpsysinfo.git \
-    ${HOME}/phpsysinfo
+  git clone https://github.com/phpsysinfo/phpsysinfo.git ${HOME}/phpsysinfo
 }
 
 config_icecast() {
@@ -397,7 +366,7 @@ Environment=XDG_RUNTIME_DIR=/run/user/1000
 Restart=always
 Type=simple
 RestartSec=3
-User=${USER}
+User=root
 ExecStart=/usr/local/bin/livestream.sh
 [Install]
 WantedBy=multi-user.target
@@ -415,7 +384,7 @@ install_weekly_cron() {
 }
 
 chown_things() {
-  chown -R $USER:$USER $HOME/Bird*
+  chown -R root:root $HOME/Bird*
 }
 
 increase_caddy_timeout() {
@@ -428,14 +397,12 @@ EOF
 }
 
 install_services() {
-  set_hostname
   update_etc_hosts
   set_login
 
   install_depends
   install_scripts
   install_Caddyfile
-  install_avahi_aliases
   install_birdnet_analysis
   install_birdnet_server
   install_birdnet_stats_service
@@ -455,7 +422,7 @@ install_services() {
   generate_BirdDB
   configure_caddy_php
   config_icecast
-  USER=$USER HOME=$HOME ${BIRDNETDIR}/scripts/createdb.sh
+  ${BIRDNETDIR}/scripts/createdb.sh
 }
 
 if [ -f ${config_file} ];then

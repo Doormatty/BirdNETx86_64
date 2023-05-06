@@ -4,9 +4,8 @@ source /etc/birdnet/birdnet.conf
 set -x
 BIRDNETDIR=/root/BirdNETx86_64/scripts
 
-
-sudo systemctl stop birdnet_server.service
-sudo systemctl stop birdnet_recording.service
+systemctl stop birdnet_server.service
+systemctl stop birdnet_recording.service
 
 services=(chart_viewer.service
   spectrogram_viewer.service
@@ -16,19 +15,19 @@ services=(chart_viewer.service
   birdnet_log.service
   birdnet_stats.service)
 
-for i in  "${services[@]}";do
-  sudo systemctl restart "${i}"
+for i in "${services[@]}"; do
+  systemctl restart "${i}"
 done
 
-sudo systemctl start birdnet_server.service
+systemctl start birdnet_server.service
 sleep 5
 
 for i in {1..5}; do
   # We want to loop here (5*5seconds) until the server is running and listening on its port
-  systemctl is-active --quiet birdnet_server.service \
-	  && grep 5050 <(netstat -tulpn 2>&1) \
-	  && logger "[$0] birdnet_server.service is running" \
-	  && break
+  systemctl is-active --quiet birdnet_server.service &&
+    grep 5050 <(netstat -tulpn 2>&1) &&
+    logger "[$0] birdnet_server.service is running" &&
+    break
 
   sleep 5
 done
@@ -37,14 +36,14 @@ done
 systemctl is-active --quiet birdnet_server.service && grep 5050 <(netstat -tulpn 2>&1)
 status=$?
 
-if (( status != 0 )); then
+if ((status != 0)); then
   logger "[$0] Unable to start birdnet_server.service... Looping until it start properly"
 
-  until grep 5050 <(netstat -tulpn 2>&1);do
-    sudo systemctl restart birdnet_server.service
+  until grep 5050 <(netstat -tulpn 2>&1); do
+    systemctl restart birdnet_server.service
     sleep 45
   done
 fi
 
 # Finally start the birdnet_analysis.service
-sudo systemctl restart birdnet_analysis.service
+systemctl restart birdnet_analysis.service
