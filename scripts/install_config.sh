@@ -253,6 +253,6 @@ if ! [ -f ${birdnet_conf} ];then
   install_config
 fi
 chmod g+w ${birdnet_conf}
-[ -d /etc/birdnet ] || sudo mkdir /etc/birdnet
+[ -d /etc/birdnet ] || mkdir /etc/birdnet
 ln -sf $birdnet_conf /etc/birdnet/birdnet.conf
 grep -ve '^#' -e '^$' /etc/birdnet/birdnet.conf > $BIRDNETDIR/firstrun.ini

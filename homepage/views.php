@@ -25,8 +25,8 @@ $user = trim($user);
 $home = shell_exec("awk -F: '/1000/{print $6}' /etc/passwd");
 $home = trim($home);
 if(!isset($_SESSION['behind'])) {
-  $fetch = shell_exec("sudo -u".$user." git -C ".$home."/BirdNET-Pi fetch 2>&1");
-  $str = trim(shell_exec("sudo -u".$user." git -C ".$home."/BirdNET-Pi status"));
+  $fetch = shell_exec(" -u".$user." git -C ".$home."/BirdNET-Pi fetch 2>&1");
+  $str = trim(shell_exec(" -u".$user." git -C ".$home."/BirdNET-Pi status"));
   if (preg_match("/behind '.*?' by (\d+) commit(s?)\b/", $str, $matches)) {
     $num_commits_behind = $matches[1];
     $_SESSION['behind'] = $num_commits_behind; 
@@ -281,52 +281,52 @@ if(isset($_GET['view'])){
   } else {
     $submittedpwd = $_SERVER['PHP_AUTH_PW'];
     $submitteduser = $_SERVER['PHP_AUTH_USER'];
-    $allowedCommands = array('sudo systemctl stop livestream.service && sudo systemctl stop icecast2.service',
-                       'sudo systemctl restart livestream.service && sudo systemctl restart icecast2.service',
-                       'sudo systemctl disable --now livestream.service && sudo systemctl disable icecast2 && sudo systemctl stop icecast2.service',
-                       'sudo systemctl enable icecast2 && sudo systemctl start icecast2.service && sudo systemctl enable --now livestream.service',
-                       'sudo systemctl stop web_terminal.service',
-                       'sudo systemctl restart web_terminal.service',
-                       'sudo systemctl disable --now web_terminal.service',
-                       'sudo systemctl enable --now web_terminal.service',
-                       'sudo systemctl stop birdnet_log.service',
-                       'sudo systemctl restart birdnet_log.service',
-                       'sudo systemctl disable --now birdnet_log.service',
-                       'sudo systemctl enable --now birdnet_log.service',
-                       'sudo systemctl stop extraction.service',
-                       'sudo systemctl restart extraction.service',
-                       'sudo systemctl disable --now extraction.service',
-                       'sudo systemctl enable --now extraction.service',
-                       'sudo systemctl stop birdnet_server.service',
-                       'sudo systemctl restart birdnet_server.service',
-                       'sudo systemctl disable --now birdnet_server.service',
-                       'sudo systemctl enable --now birdnet_server.service',
-                       'sudo systemctl stop birdnet_analysis.service',
-                       'sudo systemctl restart birdnet_analysis.service',
-                       'sudo systemctl disable --now birdnet_analysis.service',
-                       'sudo systemctl enable --now birdnet_analysis.service',
-                       'sudo systemctl stop birdnet_stats.service',
-                       'sudo systemctl restart birdnet_stats.service',
-                       'sudo systemctl disable --now birdnet_stats.service',
-                       'sudo systemctl enable --now birdnet_stats.service',
-                       'sudo systemctl stop birdnet_recording.service',
-                       'sudo systemctl restart birdnet_recording.service',
-                       'sudo systemctl disable --now birdnet_recording.service',
-                       'sudo systemctl enable --now birdnet_recording.service',
-                       'sudo systemctl stop chart_viewer.service',
-                       'sudo systemctl restart chart_viewer.service',
-                       'sudo systemctl disable --now chart_viewer.service',
-                       'sudo systemctl enable --now chart_viewer.service',
-                       'sudo systemctl stop spectrogram_viewer.service',
-                       'sudo systemctl restart spectrogram_viewer.service',
-                       'sudo systemctl disable --now spectrogram_viewer.service',
-                       'sudo systemctl enable --now spectrogram_viewer.service',
+    $allowedCommands = array('systemctl stop livestream.service && systemctl stop icecast2.service',
+                       'systemctl restart livestream.service && systemctl restart icecast2.service',
+                       'systemctl disable --now livestream.service && systemctl disable icecast2 &&  systemctl stop icecast2.service',
+                       'systemctl enable icecast2 && systemctl start icecast2.service &&  systemctl enable --now livestream.service',
+                       'systemctl stop web_terminal.service',
+                       'systemctl restart web_terminal.service',
+                       'systemctl disable --now web_terminal.service',
+                       'systemctl enable --now web_terminal.service',
+                       'systemctl stop birdnet_log.service',
+                       'systemctl restart birdnet_log.service',
+                       'systemctl disable --now birdnet_log.service',
+                       'systemctl enable --now birdnet_log.service',
+                       'systemctl stop extraction.service',
+                       'systemctl restart extraction.service',
+                       'systemctl disable --now extraction.service',
+                       'systemctl enable --now extraction.service',
+                       'systemctl stop birdnet_server.service',
+                       'systemctl restart birdnet_server.service',
+                       'systemctl disable --now birdnet_server.service',
+                       'systemctl enable --now birdnet_server.service',
+                       'systemctl stop birdnet_analysis.service',
+                       'systemctl restart birdnet_analysis.service',
+                       'systemctl disable --now birdnet_analysis.service',
+                       'systemctl enable --now birdnet_analysis.service',
+                       'systemctl stop birdnet_stats.service',
+                       'systemctl restart birdnet_stats.service',
+                       'systemctl disable --now birdnet_stats.service',
+                       'systemctl enable --now birdnet_stats.service',
+                       'systemctl stop birdnet_recording.service',
+                       'systemctl restart birdnet_recording.service',
+                       'systemctl disable --now birdnet_recording.service',
+                       'systemctl enable --now birdnet_recording.service',
+                       'systemctl stop chart_viewer.service',
+                       'systemctl restart chart_viewer.service',
+                       'systemctl disable --now chart_viewer.service',
+                       'systemctl enable --now chart_viewer.service',
+                       'systemctl stop spectrogram_viewer.service',
+                       'systemctl restart spectrogram_viewer.service',
+                       'systemctl disable --now spectrogram_viewer.service',
+                       'systemctl enable --now spectrogram_viewer.service',
                        'stop_core_services.sh',
                        'restart_services.sh',
-                       'sudo reboot',
+                       'reboot',
                        'update_birdnet.sh',
-                       'sudo shutdown now',
-                       'sudo clear_all_data.sh');
+                       'shutdown now',
+                       'clear_all_data.sh');
       $command = $_GET['submit'];
     if($submittedpwd == $caddypwd && $submitteduser == 'birdnet' && in_array($command,$allowedCommands)){
       if(isset($command)){
@@ -352,7 +352,7 @@ if(isset($_GET['view'])){
 				  $service_names = end($tmp);
 			  }
 
-          $command .= " & sleep 3;sudo systemctl status " . $service_names;
+          $command .= " & sleep 3; systemctl status " . $service_names;
         }
         if($initcommand == "update_birdnet.sh") {
           unset($_SESSION['behind']);
