@@ -26,8 +26,11 @@ source /etc/birdnet/birdnet.conf
 install_birdnet() {
   cd ~/BirdNETx86_64 || exit 1
   echo "Establishing a python virtual environment"
-  python3 -m venv birdnet
-  source ./birdnet/bin/activate
+  eval "$(pyenv init -)"
+  pyenv activate py3.9
+  # python3 -m venv birdnet
+  # source ./birdnet/bin/activate
+
   pip3 install gdown
   # Download the custom tensorflow wheel
   gdown --fuzzy 'https://drive.google.com/file/d/17MkCs6Tl4Zk0EhyKD-pqE5rmgBZbyP_S/view'
