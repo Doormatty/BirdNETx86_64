@@ -7,7 +7,7 @@ set -x
 source /etc/birdnet/birdnet.conf
 USER=$(awk -F: '/1000/ {print $1}' /etc/passwd)
 HOME=$(awk -F: '/1000/ {print $6}' /etc/passwd)
-my_dir=${HOME}/BirdNETx86_64/scripts
+BIRDNETDIR=${HOME}/BirdNETx86_64/scripts
 echo "Stopping services"
 sudo systemctl stop birdnet_recording.service
 sudo systemctl stop birdnet_analysis.service
@@ -15,7 +15,7 @@ sudo systemctl stop birdnet_server.service
 echo "Removing all data . . . "
 sudo rm -drf "${RECS_DIR}"
 sudo rm -f "${IDFILE}"
-sudo rm -f $(dirname ${my_dir})/BirdDB.txt
+sudo rm -f $(dirname ${BIRDNETDIR})/BirdDB.txt
 
 echo "Re-creating necessary directories"
 [ -d ${EXTRACTED} ] || sudo -u ${USER} mkdir -p ${EXTRACTED}
@@ -23,33 +23,33 @@ echo "Re-creating necessary directories"
 [ -d ${EXTRACTED}/Charts ] || sudo -u ${USER} mkdir -p ${EXTRACTED}/Charts
 [ -d ${PROCESSED} ] || sudo -u ${USER} mkdir -p ${PROCESSED}
 
-sudo -u ${USER} ln -fs $(dirname $my_dir)/exclude_species_list.txt $my_dir
-sudo -u ${USER} ln -fs $(dirname $my_dir)/include_species_list.txt $my_dir
-sudo -u ${USER} ln -fs $(dirname $my_dir)/homepage/* ${EXTRACTED}
-sudo -u ${USER} ln -fs $(dirname $my_dir)/model/labels.txt ${my_dir}
-sudo -u ${USER} ln -fs $my_dir ${EXTRACTED}
-sudo -u ${USER} ln -fs $my_dir/play.php ${EXTRACTED}
-sudo -u ${USER} ln -fs $my_dir/spectrogram.php ${EXTRACTED}
-sudo -u ${USER} ln -fs $my_dir/overview.php ${EXTRACTED}
-sudo -u ${USER} ln -fs $my_dir/stats.php ${EXTRACTED}
-sudo -u ${USER} ln -fs $my_dir/todays_detections.php ${EXTRACTED}
-sudo -u ${USER} ln -fs $my_dir/history.php ${EXTRACTED}
-sudo -u ${USER} ln -fs $my_dir/weekly_report.php ${EXTRACTED}
-sudo -u ${USER} ln -fs $my_dir/homepage/images/favicon.ico ${EXTRACTED}
+sudo -u ${USER} ln -fs $(dirname $BIRDNETDIR)/exclude_species_list.txt $BIRDNETDIR
+sudo -u ${USER} ln -fs $(dirname $BIRDNETDIR)/include_species_list.txt $BIRDNETDIR
+sudo -u ${USER} ln -fs $(dirname $BIRDNETDIR)/homepage/* ${EXTRACTED}
+sudo -u ${USER} ln -fs $(dirname $BIRDNETDIR)/model/labels.txt ${BIRDNETDIR}
+sudo -u ${USER} ln -fs $BIRDNETDIR ${EXTRACTED}
+sudo -u ${USER} ln -fs $BIRDNETDIR/play.php ${EXTRACTED}
+sudo -u ${USER} ln -fs $BIRDNETDIR/spectrogram.php ${EXTRACTED}
+sudo -u ${USER} ln -fs $BIRDNETDIR/overview.php ${EXTRACTED}
+sudo -u ${USER} ln -fs $BIRDNETDIR/stats.php ${EXTRACTED}
+sudo -u ${USER} ln -fs $BIRDNETDIR/todays_detections.php ${EXTRACTED}
+sudo -u ${USER} ln -fs $BIRDNETDIR/history.php ${EXTRACTED}
+sudo -u ${USER} ln -fs $BIRDNETDIR/weekly_report.php ${EXTRACTED}
+sudo -u ${USER} ln -fs $BIRDNETDIR/homepage/images/favicon.ico ${EXTRACTED}
 sudo -u ${USER} ln -fs ${HOME}/phpsysinfo ${EXTRACTED}
-sudo -u ${USER} ln -fs $(dirname $my_dir)/templates/phpsysinfo.ini ${HOME}/phpsysinfo/
-sudo -u ${USER} ln -fs $(dirname $my_dir)/templates/green_bootstrap.css ${HOME}/phpsysinfo/templates/
-sudo -u ${USER} ln -fs $(dirname $my_dir)/templates/index_bootstrap.html ${HOME}/phpsysinfo/templates/html
-chmod -R g+rw $my_dir
+sudo -u ${USER} ln -fs $(dirname $BIRDNETDIR)/templates/phpsysinfo.ini ${HOME}/phpsysinfo/
+sudo -u ${USER} ln -fs $(dirname $BIRDNETDIR)/templates/green_bootstrap.css ${HOME}/phpsysinfo/templates/
+sudo -u ${USER} ln -fs $(dirname $BIRDNETDIR)/templates/index_bootstrap.html ${HOME}/phpsysinfo/templates/html
+chmod -R g+rw $BIRDNETDIR
 chmod -R g+rw ${RECS_DIR}
 
 
 echo "Dropping and re-creating database"
 createdb.sh
 echo "Re-generating BirdDB.txt"
-touch $(dirname ${my_dir})/BirdDB.txt
-echo "Date;Time;Sci_Name;Com_Name;Confidence;Lat;Lon;Cutoff;Week;Sens;Overlap" > $(dirname ${my_dir})/BirdDB.txt
-ln -sf $(dirname ${my_dir})/BirdDB.txt ${my_dir}/BirdDB.txt
-chown $USER:$USER ${my_dir}/BirdDB.txt && chmod g+rw ${my_dir}/BirdDB.txt
+touch $(dirname ${BIRDNETDIR})/BirdDB.txt
+echo "Date;Time;Sci_Name;Com_Name;Confidence;Lat;Lon;Cutoff;Week;Sens;Overlap" > $(dirname ${BIRDNETDIR})/BirdDB.txt
+ln -sf $(dirname ${BIRDNETDIR})/BirdDB.txt ${BIRDNETDIR}/BirdDB.txt
+chown $USER:$USER ${BIRDNETDIR}/BirdDB.txt && chmod g+rw ${BIRDNETDIR}/BirdDB.txt
 echo "Restarting services"
 restart_services.sh

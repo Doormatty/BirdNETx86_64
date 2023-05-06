@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source /etc/birdnet/birdnet.conf
-my_dir=$HOME/BirdNETx86_64/scripts
+BIRDNETDIR=/root/BirdNETx86_64/scripts
 set -x
 [ -d /etc/caddy ] || mkdir /etc/caddy
 if [ -f /etc/caddy/Caddyfile ];then

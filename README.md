@@ -1,1 +1,1 @@
-curl -s https://raw.githubusercontent.com/jammbrose/BirdNETx86_64/main/newinstaller.sh | bash
+curl -s https://raw.githubusercontent.com/doormatty/BirdNETx86_64/main/newinstaller.sh | bash

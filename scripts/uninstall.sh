@@ -2,11 +2,11 @@
 # Uninstall script to remove everything
 #set -x # Uncomment to debug
 trap 'rm -f ${TMPFILE}' EXIT
-my_dir=$HOME/BirdNETx86_64/scripts
+BIRDNETDIR=/root/BirdNETx86_64/scripts
 source /etc/birdnet/birdnet.conf &> /dev/null
-SCRIPTS=($(ls -1 ${my_dir}) ${HOME}/.gotty)
+SCRIPTS=($(ls -1 ${BIRDNETDIR}) ${HOME}/.gotty)
 set -x
-services=($(awk '/service/ && /systemctl/ && !/php/ {print $3}' ${my_dir}/install_services.sh | sort) custom_recording.service avahi-alias@.service)
+services=($(awk '/service/ && /systemctl/ && !/php/ {print $3}' ${BIRDNETDIR}/install_services.sh | sort) custom_recording.service avahi-alias@.service)
 
 remove_services() {
   for i in "${services[@]}"; do

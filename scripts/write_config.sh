@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 # Writes variables to config file
-birdnetpi_dir=$HOME/BirdNETx86_64
+birdnetpi_dir=/root/BirdNETx86_64
 birders_conf=${birdnetpi_dir}/Birders_Guide_Installer_Configuration.txt
 sed -i s/'^LATITUDE=$'/"LATITUDE=${new_lat}"/g ${birders_conf}
 sed -i s/'^LONGITUDE=$'/"LONGITUDE=${new_lon}"/g ${birders_conf}

@@ -5,5 +5,5 @@ if [ ${APPRISE_WEEKLY_REPORT} == 1 ];then
 	NOTIFICATION=${NOTIFICATION#*#}
 	firstLine=`echo "${NOTIFICATION}" | head -1`
 	NOTIFICATION=`echo "${NOTIFICATION}" | tail -n +2`
-	$HOME/BirdNETx86_64/birdnet/bin/apprise -vv -t "${firstLine}" -b "${NOTIFICATION}" --input-format=html --config=$HOME/BirdNETx86_64/apprise.txt
+	/root/BirdNETx86_64/birdnet/bin/apprise -vv -t "${firstLine}" -b "${NOTIFICATION}" --input-format=html --config=/root/BirdNETx86_64/apprise.txt
 fi

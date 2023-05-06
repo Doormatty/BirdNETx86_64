@@ -5,10 +5,10 @@ source /etc/birdnet/birdnet.conf
 # Document this run's birdnet.conf settings
 # Make a temporary file to compare the current birdnet.conf with
 # the birdnet.conf as it was the last time this script was called
-my_dir=$HOME/BirdNETx86_64/scripts
-if [ -z ${THIS_RUN} ];then THIS_RUN=$my_dir/thisrun.txt;fi
+BIRDNETDIR=/root/BirdNETx86_64/scripts
+if [ -z ${THIS_RUN} ];then THIS_RUN=$BIRDNETDIR/thisrun.txt;fi
 [ -f ${THIS_RUN} ] || touch ${THIS_RUN} && chmod g+w ${THIS_RUN}
-if [ -z ${LAST_RUN} ];then LAST_RUN=$my_dir/lastrun.txt;fi
+if [ -z ${LAST_RUN} ];then LAST_RUN=$BIRDNETDIR/lastrun.txt;fi
 [ -z ${LATITUDE} ] && echo "LATITUDE not set, exiting 1" && exit 1
 [ -z ${LONGITUDE} ] && echo "LONGITUDE not set, exiting 1" && exit 1
 make_thisrun() {
@@ -29,8 +29,8 @@ if ! diff ${LAST_RUN} ${THIS_RUN};then
   cat ${THIS_RUN} > ${LAST_RUN}
 fi
 
-INCLUDE_LIST="$HOME/BirdNETx86_64/include_species_list.txt"
-EXCLUDE_LIST="$HOME/BirdNETx86_64/exclude_species_list.txt"
+INCLUDE_LIST="/root/BirdNETx86_64/include_species_list.txt"
+EXCLUDE_LIST="/root/BirdNETx86_64/exclude_species_list.txt"
 if [ ! -f ${INCLUDE_LIST} ];then
   touch ${INCLUDE_LIST} &&
     chmod g+rw ${INCLUDE_LIST}
@@ -77,8 +77,8 @@ move_analyzed() {
 # Uses one argument:
 #   - {DIRECTORY}
 run_analysis() {
-  PYTHON_VIRTUAL_ENV="$HOME/BirdNETx86_64/birdnet/bin/python3"
-  DIR="$HOME/BirdNETx86_64/scripts"
+  PYTHON_VIRTUAL_ENV="/root/BirdNETx86_64/birdnet/bin/python3"
+  DIR="/root/BirdNETx86_64/scripts"
 
   sleep .5
 
@@ -97,7 +97,7 @@ run_analysis() {
 
   for i in "${files[@]}";do
     [ ! -f ${1}/${i} ] && continue
-    echo "${1}/${i}" > $HOME/BirdNETx86_64/analyzing_now.txt
+    echo "${1}/${i}" > /root/BirdNETx86_64/analyzing_now.txt
     [ -z ${RECORDING_LENGTH} ] && RECORDING_LENGTH=15
     echo "RECORDING_LENGTH set to ${RECORDING_LENGTH}"
     itr=0

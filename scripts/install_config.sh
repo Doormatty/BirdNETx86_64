@@ -5,7 +5,7 @@ set -e
 trap 'exit 1' SIGINT SIGHUP
 
 echo "Beginning $0"
-birdnet_conf=$my_dir/birdnet.conf
+birdnet_conf=$BIRDNETDIR/birdnet.conf
 
 # Retrieve latitude and longitude from web
 LATITUDE=$(curl -s4 http://ip-api.com/json?fields=lat,lon | jq .lat)
@@ -244,7 +244,7 @@ CUSTOM_IMAGE_TITLE=""
 ## These are just for debugging
 LAST_RUN=
 THIS_RUN=
-IDFILE=$HOME/BirdNETx86_64/IdentifiedSoFar.txt
+IDFILE=/root/BirdNETx86_64/IdentifiedSoFar.txt
 EOF
 }
 
@@ -254,5 +254,5 @@ if ! [ -f ${birdnet_conf} ];then
 fi
 chmod g+w ${birdnet_conf}
 [ -d /etc/birdnet ] || sudo mkdir /etc/birdnet
-sudo ln -sf $birdnet_conf /etc/birdnet/birdnet.conf
-grep -ve '^#' -e '^$' /etc/birdnet/birdnet.conf > $my_dir/firstrun.ini
+ln -sf $birdnet_conf /etc/birdnet/birdnet.conf
+grep -ve '^#' -e '^$' /etc/birdnet/birdnet.conf > $BIRDNETDIR/firstrun.ini

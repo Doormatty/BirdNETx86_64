@@ -2,10 +2,7 @@
 error_reporting(E_ERROR);
 ini_set('display_errors',1);
 
-function syslog_shell_exec($cmd, $sudo_user = null) {
-  if ($sudo_user) {
-    $cmd = "sudo -u $sudo_user $cmd";
-  }
+function syslog_shell_exec($cmd) {
   $output = shell_exec($cmd);
 
   if (strlen($output) > 0) {
@@ -118,13 +115,13 @@ if(isset($_GET["latitude"])){
       $home = trim(shell_exec("awk -F: '/1000/{print $6}' /etc/passwd"));
 
       // Archive old language file
-      syslog_shell_exec("cp -f $home/BirdNETx86_64/model/labels.txt $home/BirdNETx86_64/model/labels.txt.old", $user);
+      syslog_shell_exec("cp -f /root/BirdNETx86_64/model/labels.txt /root/BirdNETx86_64/model/labels.txt.old", $user);
 
       if($model == "BirdNET_GLOBAL_3K_V2.2_Model_FP16"){
       // Install new language label file
-        syslog_shell_exec("sudo chmod +x $home/BirdNETx86_64/scripts/install_language_label_nm.sh && $home/BirdNETx86_64/scripts/install_language_label_nm.sh -l $language", $user);
+        syslog_shell_exec("sudo chmod +x /root/BirdNETx86_64/scripts/install_language_label_nm.sh && /root/BirdNETx86_64/scripts/install_language_label_nm.sh -l $language", $user);
       } else {
-        syslog_shell_exec("$home/BirdNETx86_64/scripts/install_language_label.sh -l $language", $user);
+        syslog_shell_exec("/root/BirdNETx86_64/scripts/install_language_label.sh -l $language", $user);
       }
 
       syslog(LOG_INFO, "Successfully changed language to '$language' and model to '$model'");

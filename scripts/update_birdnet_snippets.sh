@@ -4,7 +4,7 @@ source /etc/birdnet/birdnet.conf
 trap 'exit 1' SIGINT SIGHUP
 USER=$(awk -F: '/1000/ {print $1}' /etc/passwd)
 HOME=$(awk -F: '/1000/ {print $6}' /etc/passwd)
-my_dir=$HOME/BirdNETx86_64/scripts
+BIRDNETDIR=/root/BirdNETx86_64/scripts
 
 # Sets proper permissions and ownership
 #sudo -E chown -R $USER:$USER $HOME/*
@@ -13,7 +13,7 @@ find $HOME/Bird* -type f ! -perm -g+wr -exec chmod g+wr {} + 2>/dev/null
 find $HOME/Bird* -not -user $USER -execdir sudo -E chown $USER:$USER {} \+
 chmod 666 ~/BirdNETx86_64/scripts/*.txt
 chmod 666 ~/BirdNETx86_64/*.txt
-find $HOME/BirdNETx86_64 -path "$HOME/BirdNETx86_64/birdnet" -prune -o -type f ! -perm /o=w -exec chmod a+w {} \;
+find /root/BirdNETx86_64 -path "/root/BirdNETx86_64/birdnet" -prune -o -type f ! -perm /o=w -exec chmod a+w {} \;
 
 # remove world-writable perms
 chmod -R o-w ~/BirdNETx86_64/templates/*
@@ -26,17 +26,17 @@ fi
 
 if ! grep PRIVACY_THRESHOLD /etc/birdnet/birdnet.conf &>/dev/null;then
   sudo -u$USER echo "PRIVACY_THRESHOLD=0" >> /etc/birdnet/birdnet.conf
-  git -C $HOME/BirdNETx86_64 rm $my_dir/privacy_server.py
+  git -C /root/BirdNETx86_64 rm $BIRDNETDIR/privacy_server.py
 fi
-if [ -f $my_dir/privacy_server ] || [ -L /usr/local/bin/privacy_server.py ];then
-  rm -f $my_dir/privacy_server.py
+if [ -f $BIRDNETDIR/privacy_server ] || [ -L /usr/local/bin/privacy_server.py ];then
+  rm -f $BIRDNETDIR/privacy_server.py
   rm -f /usr/local/bin/privacy_server.py
 fi
 
 # Adds python virtual-env to the python systemd services
-if ! grep 'BirdNETx86_64/birdnet/' $HOME/BirdNETx86_64/templates/birdnet_server.service &>/dev/null || ! grep 'BirdNETx86_64/birdnet' $HOME/BirdNETx86_64/templates/chart_viewer.service &>/dev/null;then
-  sudo -E sed -i "s|ExecStart=.*|ExecStart=$HOME/BirdNETx86_64/birdnet/bin/python3 /usr/local/bin/server.py|" ~/BirdNETx86_64/templates/birdnet_server.service
-  sudo -E sed -i "s|ExecStart=.*|ExecStart=$HOME/BirdNETx86_64/birdnet/bin/python3 /usr/local/bin/daily_plot.py|" ~/BirdNETx86_64/templates/chart_viewer.service
+if ! grep 'BirdNETx86_64/birdnet/' /root/BirdNETx86_64/templates/birdnet_server.service &>/dev/null || ! grep 'BirdNETx86_64/birdnet' /root/BirdNETx86_64/templates/chart_viewer.service &>/dev/null;then
+  sudo -E sed -i "s|ExecStart=.*|ExecStart=/root/BirdNETx86_64/birdnet/bin/python3 /usr/local/bin/server.py|" ~/BirdNETx86_64/templates/birdnet_server.service
+  sudo -E sed -i "s|ExecStart=.*|ExecStart=/root/BirdNETx86_64/birdnet/bin/python3 /usr/local/bin/daily_plot.py|" ~/BirdNETx86_64/templates/chart_viewer.service
   sudo systemctl daemon-reload && restart_services.sh
 fi
 
@@ -74,18 +74,18 @@ fi
 
 apprise_installation_status=$(~/BirdNETx86_64/birdnet/bin/python3 -c 'import pkgutil; print("installed" if pkgutil.find_loader("apprise") else "not installed")')
 if [[ "$apprise_installation_status" = "not installed" ]];then
-  $HOME/BirdNETx86_64/birdnet/bin/pip3 install -U pip
-  $HOME/BirdNETx86_64/birdnet/bin/pip3 install apprise==1.2.1
+  /root/BirdNETx86_64/birdnet/bin/pip3 install -U pip
+  /root/BirdNETx86_64/birdnet/bin/pip3 install apprise==1.2.1
 fi
-[ -f $HOME/BirdNETx86_64/apprise.txt ] || sudo -E -ucaddy touch $HOME/BirdNETx86_64/apprise.txt
+[ -f /root/BirdNETx86_64/apprise.txt ] || sudo -E -ucaddy touch /root/BirdNETx86_64/apprise.txt
 if ! which lsof &>/dev/null;then
   sudo apt update && sudo apt -y install lsof
 fi
 if ! grep RTSP_STREAM /etc/birdnet/birdnet.conf &>/dev/null;then
   sudo -u$USER echo "RTSP_STREAM=" >> /etc/birdnet/birdnet.conf
 fi
-if grep bash $HOME/BirdNETx86_64/templates/web_terminal.service &>/dev/null;then
-  sudo sed -i '/User/d;s/bash/login/g' $HOME/BirdNETx86_64/templates/web_terminal.service
+if grep bash /root/BirdNETx86_64/templates/web_terminal.service &>/dev/null;then
+  sudo sed -i '/User/d;s/bash/login/g' /root/BirdNETx86_64/templates/web_terminal.service
   sudo systemctl daemon-reload
   sudo systemctl restart web_terminal.service
 fi
@@ -96,12 +96,12 @@ fi
 if systemctl list-unit-files pushed_notifications.service &>/dev/null;then
   sudo systemctl disable --now pushed_notifications.service
   sudo rm -f /usr/lib/systemd/system/pushed_notifications.service
-  sudo rm $HOME/BirdNETx86_64/templates/pushed_notifications.service
+  sudo rm /root/BirdNETx86_64/templates/pushed_notifications.service
 fi
 
-if [ ! -f $HOME/BirdNETx86_64/model/labels.txt ];then
+if [ ! -f /root/BirdNETx86_64/model/labels.txt ];then
   [ $DATABASE_LANG == 'not-selected' ] && DATABASE_LANG=en
-  $my_dir/install_language_label.sh -l $DATABASE_LANG \
+  $BIRDNETDIR/install_language_label.sh -l $DATABASE_LANG \
   && logger "[$0] Installed new language label file for '$DATABASE_LANG'";
 fi
 
@@ -111,14 +111,14 @@ fi
 
 pytest_installation_status=$(~/BirdNETx86_64/birdnet/bin/python3 -c 'import pkgutil; print("installed" if pkgutil.find_loader("pytest") else "not installed")')
 if [[ "$pytest_installation_status" = "not installed" ]];then
-  $HOME/BirdNETx86_64/birdnet/bin/pip3 install -U pip
-  $HOME/BirdNETx86_64/birdnet/bin/pip3 install pytest==7.1.2 pytest-mock==3.7.0
+  /root/BirdNETx86_64/birdnet/bin/pip3 install -U pip
+  /root/BirdNETx86_64/birdnet/bin/pip3 install pytest==7.1.2 pytest-mock==3.7.0
 fi
 
 [ -L ~/BirdSongs/Extracted/weekly_report.php ] || ln -sf ~/BirdNETx86_64/scripts/weekly_report.php ~/BirdSongs/Extracted
 
 if ! grep weekly_report /etc/crontab &>/dev/null;then
-  sed "s/\$USER/$USER/g" $HOME/BirdNETx86_64/templates/weekly_report.cron | sudo tee -a /etc/crontab
+  sed "s/\$USER/$USER/g" /root/BirdNETx86_64/templates/weekly_report.cron | sudo tee -a /etc/crontab
 fi
 if ! grep APPRISE_WEEKLY_REPORT /etc/birdnet/birdnet.conf &>/dev/null;then
   sudo -u$USER echo "APPRISE_WEEKLY_REPORT=1" >> /etc/birdnet/birdnet.conf
@@ -128,8 +128,8 @@ if ! grep SILENCE_UPDATE_INDICATOR /etc/birdnet/birdnet.conf &>/dev/null;then
   sudo -u$USER echo "SILENCE_UPDATE_INDICATOR=0" >> /etc/birdnet/birdnet.conf
 fi
 
-if ! grep '\-\-browser.gatherUsageStats false' $HOME/BirdNETx86_64/templates/birdnet_stats.service &>/dev/null ;then
-  sudo -E sed -i "s|ExecStart=.*|ExecStart=$HOME/BirdNETx86_64/birdnet/bin/streamlit run $HOME/BirdNETx86_64/scripts/plotly_streamlit.py --browser.gatherUsageStats false --server.address localhost --server.baseUrlPath \"/stats\"|" $HOME/BirdNETx86_64/templates/birdnet_stats.service
+if ! grep '\-\-browser.gatherUsageStats false' /root/BirdNETx86_64/templates/birdnet_stats.service &>/dev/null ;then
+  sudo -E sed -i "s|ExecStart=.*|ExecStart=/root/BirdNETx86_64/birdnet/bin/streamlit run /root/BirdNETx86_64/scripts/plotly_streamlit.py --browser.gatherUsageStats false --server.address localhost --server.baseUrlPath \"/stats\"|" /root/BirdNETx86_64/templates/birdnet_stats.service
   sudo systemctl daemon-reload && restart_services.sh
 fi
 
@@ -160,19 +160,19 @@ if ! grep SF_THRESH /etc/birdnet/birdnet.conf &>/dev/null;then
 fi
 sudo chmod +x ~/BirdNETx86_64/scripts/install_language_label_nm.sh
 
-sqlite3 $HOME/BirdNETx86_64/scripts/birds.db << EOF
+sqlite3 /root/BirdNETx86_64/scripts/birds.db << EOF
 CREATE INDEX IF NOT EXISTS "detections_Com_Name" ON "detections" ("Com_Name");
 CREATE INDEX IF NOT EXISTS "detections_Date_Time" ON "detections" ("Date" DESC, "Time" DESC);
 EOF
 
-apprise_version=$($HOME/BirdNETx86_64/birdnet/bin/python3 -c "import apprise; print(apprise.__version__)")
-streamlit_version=$($HOME/BirdNETx86_64/birdnet/bin/pip3 show streamlit 2>/dev/null | grep Version | awk '{print $2}')
+apprise_version=$(/root/BirdNETx86_64/birdnet/bin/python3 -c "import apprise; print(apprise.__version__)")
+streamlit_version=$(/root/BirdNETx86_64/birdnet/bin/pip3 show streamlit 2>/dev/null | grep Version | awk '{print $2}')
 
-[[ $apprise_version != "1.2.1" ]] && $HOME/BirdNETx86_64/birdnet/bin/pip3 install apprise==1.2.1
-[[ $streamlit_version != "1.19.0" ]] && $HOME/BirdNETx86_64/birdnet/bin/pip3 install streamlit==1.19.0
+[[ $apprise_version != "1.2.1" ]] && /root/BirdNETx86_64/birdnet/bin/pip3 install apprise==1.2.1
+[[ $streamlit_version != "1.19.0" ]] && /root/BirdNETx86_64/birdnet/bin/pip3 install streamlit==1.19.0
 
-if ! grep -q 'RuntimeMaxSec=' "$HOME/BirdNETx86_64/templates/birdnet_analysis.service"&>/dev/null; then
-    sudo -E sed -i '/\[Service\]/a RuntimeMaxSec=3600' "$HOME/BirdNETx86_64/templates/birdnet_analysis.service"
+if ! grep -q 'RuntimeMaxSec=' "/root/BirdNETx86_64/templates/birdnet_analysis.service"&>/dev/null; then
+    sudo -E sed -i '/\[Service\]/a RuntimeMaxSec=3600' "/root/BirdNETx86_64/templates/birdnet_analysis.service"
     sudo systemctl daemon-reload && restart_services.sh
 fi
 

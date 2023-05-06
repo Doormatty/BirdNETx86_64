@@ -3,8 +3,8 @@
 # set -x # Uncomment to debug
 source /etc/birdnet/birdnet.conf &> /dev/null
 LOG_DIR="${HOME}/BirdNETx86_64/logs"
-my_dir=$HOME/BirdNETx86_64/scripts
-services=$(awk '/service/ && /systemctl/ && !/php/ {print $3}' ${my_dir}/install_services.sh | sort)
+BIRDNETDIR=/root/BirdNETx86_64/scripts
+services=$(awk '/service/ && /systemctl/ && !/php/ {print $3}' ${BIRDNETDIR}/install_services.sh | sort)
 
 # Create logs directory
 [ -d ${LOG_DIR} ] || mkdir ${LOG_DIR}

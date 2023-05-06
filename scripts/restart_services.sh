@@ -2,7 +2,7 @@
 # Restarts ALL services and removes ALL unprocessed audio
 source /etc/birdnet/birdnet.conf
 set -x
-my_dir=$HOME/BirdNETx86_64/scripts
+BIRDNETDIR=/root/BirdNETx86_64/scripts
 
 
 sudo systemctl stop birdnet_server.service

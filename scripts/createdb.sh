@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source /etc/birdnet/birdnet.conf
-sqlite3 $HOME/BirdNETx86_64/scripts/birds.db << EOF
+sqlite3 /root/BirdNETx86_64/scripts/birds.db << EOF
 DROP TABLE IF EXISTS detections;
 CREATE TABLE IF NOT EXISTS detections (
   Date DATE,
@@ -18,5 +18,5 @@ CREATE TABLE IF NOT EXISTS detections (
 CREATE INDEX "detections_Com_Name" ON "detections" ("Com_Name");
 CREATE INDEX "detections_Date_Time" ON "detections" ("Date" DESC, "Time" DESC);
 EOF
-chown $USER:$USER $HOME/BirdNETx86_64/scripts/birds.db
-chmod g+w $HOME/BirdNETx86_64/scripts/birds.db
+chown $USER:$USER /root/BirdNETx86_64/scripts/birds.db
+chmod g+w /root/BirdNETx86_64/scripts/birds.db

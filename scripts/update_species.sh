@@ -2,6 +2,6 @@
 # Update the species list
 #set -x
 source /etc/birdnet/birdnet.conf
-if [ -f $HOME/BirdNETx86_64/scripts/birds.db ];then
-sqlite3 $HOME/BirdNETx86_64/scripts/birds.db "SELECT DISTINCT(Com_Name) FROM detections" | sort >  ${IDFILE}
+if [ -f /root/BirdNETx86_64/scripts/birds.db ];then
+sqlite3 /root/BirdNETx86_64/scripts/birds.db "SELECT DISTINCT(Com_Name) FROM detections" | sort >  ${IDFILE}
 fi
